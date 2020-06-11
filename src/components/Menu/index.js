@@ -1,7 +1,8 @@
 import React from 'react';
 
 import QRCode from 'react-native-qrcode-svg';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MatterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { 
 	Container, 
@@ -19,7 +20,7 @@ export default function Menu({ translateY }) {
 			style={{
 	      		opacity: translateY.interpolate({
 	        	inputRange: [0, 150],
-	        	outputRange: [0, 1],
+	        	outputRange: [0, 150],
 	      	})
     	}}>
 			<Code>
@@ -36,33 +37,40 @@ export default function Menu({ translateY }) {
 			<Nav style={{flex: 1}}>
 		        
 				<NavItem>
-					<Icon name="help-outline" size={20} color="#FFF" />
+					<MaterialIcons name="help-outline" size={20} color="#FFF" />
 					<NavText>Me ajuda</NavText>
 				</NavItem>
 
 				<NavItem>
-					<Icon name="person-outline" size={20} color="#FFF" />
+					<MaterialIcons name="person-outline" size={20} color="#FFF" />
 					<NavText>Perfil</NavText>
 				</NavItem>
 
 				<NavItem>
-					<Icon name="credit-card" size={20} color="#FFF" />
+					<MatterialCommunityIcons name="database" size={20} color="#FFF" />
+					<NavText>Configurar conta</NavText>
+				</NavItem>
+
+				<NavItem>
+					<MaterialIcons name="credit-card" size={20} color="#FFF" />
 					<NavText>Configurar cartão</NavText>
 				</NavItem>
 
 				<NavItem>
-					<Icon name="smartphone" size={20} color="#FFF" />
+					<MaterialIcons name="smartphone" size={20} color="#FFF" />
 					<NavText>Configurações do app</NavText>
 				</NavItem>
-
-
+				
+        <NavItem>
+					<MaterialIcons name="store" size={20} color="#FFF" />
+					<NavText>Pedir conta PJ</NavText>
+				</NavItem>
 			</Nav>
 
 			<SignOutButtom onPress={() => {}}>
-				<SignOutButtomText>Sair do app</SignOutButtomText>
+				<SignOutButtomText>Sair da conta</SignOutButtomText>
 			</SignOutButtom>
-	        
-
+      
 		</Container>
 	);	
 } 

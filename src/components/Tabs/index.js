@@ -1,6 +1,7 @@
 import React from 'react';
 
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcons          from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { Container, TabsContainer, TabItem, TabText } from './styles';
 
@@ -25,31 +26,50 @@ export default function Tabs({ translateY }) {
 			<TabsContainer>
 				
 				<TabItem>
-					<Icon name="person-add" size={24} color='#FFF'/>
+					<MaterialIcons name="person-add" size={24} color='#FFF'/>
 					<TabText>Indicar amigos</TabText>
 				</TabItem>
 
+        <TabItem>
+					<MaterialIcons name="smartphone" size={24} color='#FFF'/>
+					<TabText>Recarga de celular</TabText>
+				</TabItem>
+
 				<TabItem>
-					<Icon name="chat-bubble-outline" size={24} color='#FFF'/>
+					<MaterialIcons name="chat-bubble-outline" size={24} color='#FFF'/>
 					<TabText>Cobrar</TabText>
 				</TabItem>
 
 				<TabItem>
-					<Icon name="arrow-downward" size={24} color='#FFF'/>
+					<MaterialIcons name="arrow-downward" size={24} color='#FFF'/>
 					<TabText>Depositar</TabText>
 				</TabItem>
 
 				<TabItem>
-					<Icon name="arrow-upward" size={24} color='#FFF'/>
+					<MaterialIcons name="arrow-upward" size={24} color='#FFF'/>
 					<TabText>Transferir</TabText>
+				</TabItem>
+				
+        <TabItem>
+					<MaterialIcons name="help-outline" size={24} color='#FFF'/>
+					<TabText>Me ajuda</TabText>
+				</TabItem>
+
+        <TabItem>
+					<MaterialCommunityIcons name="barcode" size={24} color='#FFF'/>
+					<TabText>Pagar</TabText>
 				</TabItem>
 
 				<TabItem>
-					<Icon name="lock" size={24} color='#FFF'/>
+					<MaterialIcons name="lock" size={24} color='#FFF'/>
 					<TabText>Bloquear cartão</TabText>
 				</TabItem>
 
-				
+				<TabItem>
+					<MaterialIcons name="sort" size={24} color='#FFF'/>
+					<TabText>Organizar atalhos</TabText>
+				</TabItem>
+
 			</TabsContainer>
 		</Container>
 	);	
