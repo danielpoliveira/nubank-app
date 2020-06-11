@@ -1,8 +1,14 @@
-import React from 'react';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import React, {useState} from 'react';
 
-import { Animated, StyleSheet, TouchableOpacity } from 'react-native';
-import { PanGestureHandler, State } from 'react-native-gesture-handler';
+import { Animated, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+import  { openClose } from './actions';
 
 import Header from '../../components/Header';
 import Tabs from '../../components/Tabs';
@@ -10,11 +16,13 @@ import Menu from '../../components/Menu';
 
 import { 
 	Container, 
-	Content,
+  Content,
+  Cards,
 	Card, 
 	CardHeader, 
   CardRow,
-	CardContent, 
+  CardContent, 
+  CartText,
 	Title, 
 	Description, 
 	CardFooter, 
@@ -22,94 +30,51 @@ import {
 	Annotation 
 } from './styles';
 
-
-export default function Main() {
+const Main = ({ opened, openClose }) => {
+  const [translateY] = useState(new Animated.Value(0));
   let offset = 0;
 
-  const translateY = new Animated.Value(0);
-  const animatedEvent = Animated.event(
-    [
-      {
-        nativeEvent: {
-          translationY: translateY,
-        },
-      },
-    ], 
-    { useNativeDriver: true } ,
-  )
+  const pressedArrow = () => {
+    offset += translateY;
 
-  function pressedArrowDown(event) {
-
-    offset += 400;
-    
     Animated.timing(translateY, {
-        toValue: 400,
-        duration: 200,
+        toValue: !opened? 490:0,
+        duration: 300,
         useNativeDriver: true,
     }).start(() => {
-        
-        translateY.setOffset(offset);
-        translateY.setValue(0);
-    }); 
-  }
-  
-  function onHandlerStateChanged(event) { 
-    if (event.nativeEvent.oldState === State.ACTIVE) {
-      let opened = false;
-
-      const { translationY } = event.nativeEvent;
-
-      offset += translationY;
-
-      if(translationY >= 100) {
-        opened = true;
-      } else {
+        offset = !opened? 490: 0;
+        openClose();
         translateY.setValue(offset);
-        translateY.setOffset(0);
-        offset = 0;
-      }
-
-      Animated.timing(translateY, {
-        toValue: opened ? 400: 0,
-        duration: 200,
-        useNativeDriver: true,
-      }).start(() => {
-        offset = opened ? 400 : 0;
-        translateY.setOffset(offset);
-        translateY.setValue(0);
-      });
-
-    }
+    }); 
   }
 
   return (
     <Container>
         
       <Header />
-      <TouchableOpacity onPress={pressedArrowDown} >      
-        <Icon style={styles.iconArrowDown} name="keyboard-arrow-down" size={20} color='#FFF' />
+      <TouchableOpacity onPress={pressedArrow} >            
+        <MaterialIcons style={styles.iconArrowDown} name={opened? "keyboard-arrow-up": "keyboard-arrow-down"} size={20} color='#FFF' />
       </TouchableOpacity>
        
       <Content>
          <Menu translateY={translateY} />
 
-        <PanGestureHandler
-          onGestureEvent={animatedEvent}
-          onHandlerStateChange={onHandlerStateChanged}
-
+        <Cards 
+          style={{
+            transform: [{ 
+              translateY: translateY.interpolate({ 
+                inputRange: [0, 500], 
+                outputRange: [0, 500], 
+                extrapolate: 'clamp'
+              }) 
+            }]
+          }}
         >
-        	<Card style={{
-              transform: [{ 
-                translateY: translateY.interpolate({
-                  inputRange: [0, 400],
-                  outputRange: [0, 400],
-                  extrapolate: 'clamp',
-                })
-              }]
-          }}>
+        <ScrollView scrollEnabled={!opened} >
+        	<Card>
         		<CardHeader>
-        			<Icon color="#666" name="attach-money" size={28} />
-        			<Icon color="#666" name="visibility-off" size={28} />      			
+        			<MaterialIcons color="#666" name="attach-money" size={28} />
+        			<MaterialIcons color="#666" name="visibility-off" size={28} />      			
         		</CardHeader>
 
         		<CardContent>
@@ -125,7 +90,7 @@ export default function Main() {
 
                 <TouchableOpacity>
                   <CardRow>
-                    <Icon color="#666" name="keyboard-arrow-right" size={28} />
+                    <MaterialIcons color="#666" name="keyboard-arrow-right" size={28} />
                   </CardRow>
                 </TouchableOpacity>
 
@@ -134,7 +99,27 @@ export default function Main() {
         		</CardFooter>
 
         	</Card>
-        </PanGestureHandler>
+        	<Card style={{  }}>
+        		<CardHeader center >
+        			<MaterialIcons color="#666" name="payment" size={28} />
+        		</CardHeader>
+
+        		<CardContent>
+              <Description textMessage >
+                Ainda não podemos te dar um cartão de crédito.
+              </Description>
+        			
+              
+              <CartText style={{fontSize: 17, marginHorizontal: 18, marginVertical: 20, textAlign: "center"}}>
+                Você recentemente passou por uma análise e não pudemos te oferecer um cartão de crédito.
+                Sugerimos que você espere 3 meses a partir do último pedido para solicitar novamente.
+              </CartText>
+
+        		</CardContent>
+        	</Card>
+       
+        </ScrollView>
+        </Cards>
 
       </Content>
 
@@ -143,6 +128,11 @@ export default function Main() {
   );
 }
 
+const mapStateToProps = state => ({ opened: state.card.opened });
+const mapDispatchToProps = dispatch => bindActionCreators({ openClose }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Main);
+
 
 const styles = StyleSheet.create({
   iconArrowDown: {
@@ -150,3 +140,4 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
+
